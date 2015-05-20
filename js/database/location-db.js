@@ -47,9 +47,23 @@ LocationDb.prototype.findNearby = function(query, callback) {
         return;
     }
 
+    // The default values
+    var spherical = true;
+    var maxDistance = 1000;
+    // Read if some other values were passed
+    if (query.spherical) {
+        spherical = query.spherical;
+    }
+    if (query.maxDistance) {
+        maxDistance = query.maxDistance;
+    }
+
     console.log("Searching for nearby:", query);
 
-    callback(null, "ok");
+    var Location = mongoose.model('Location', LocationSchema);
+    // Find nearby
+    Location.geoNear(query, { maxDistance : maxDistance, spherical : spherical}, callback);
+
 };
 
 module.exports = LocationDb;

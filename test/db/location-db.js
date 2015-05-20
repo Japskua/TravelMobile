@@ -46,6 +46,24 @@ describe('Testing location database functions', function() {
 
     });
 
+    describe('Testing of finding locations nearby', function() {
+        it('Should find a location close by', function(done) {
+            var searchLocation = { type : "Point", coordinates : [30.003, 50.00]};
+            var query = {
+                loc : searchLocation,
+                maxDistance : 1000,
+                spherical : true
+            };
+            locationDb.findNearby(searchLocation, function(err, result) {
+                if(err) {
+                    throw err;
+                }
+                console.log("Found the following nearby:", result);
+                done();
+            });
+        });
+    });
+
     describe('Testing removal of location from the database', function() {
 
         it("Should remove the given location from the database", function(done) {
