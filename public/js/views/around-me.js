@@ -47,18 +47,66 @@ define(['jquery',
                 return this;
             },
             initMap : function() {
+
+                var view = new OpenLayers.View({
+                    center : [0,0],
+                    zoom : 2
+                });
+
                 var map = new OpenLayers.Map({
                     target : 'map',
                     layers : [
                         new OpenLayers.layer.Tile({
-                            source : new OpenLayers.source.MapQuest({layer : 'sat'})
+                            source : new OpenLayers.source.OSM()
                         })
                     ],
-                    view : new OpenLayers.View({
-                        center : OpenLayers.proj.transform([37.41, 8.82], 'EPSG:4326', 'EPSG:3857'),
-                        zoom : 4
+                    controls: OpenLayers.control.defaults({
+                        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+                            collapsible: false
+                        })
+                    }),
+                    view: view
+                });
+
+                var geolocation = new OpenLayers.Geolocation({
+                    projection : view.getProjection()
+                });
+
+                geolocation.setTracking(true);
+
+                var positionFeature = new OpenLayers.Feature();
+                positionFeature.setStyle(new OpenLayers.style.Style({
+                    image : new OpenLayers.style.Circle({
+                        radius : 6,
+                        fill : new OpenLayers.style.Fill({
+                            color : '#3399CC'
+                        }),
+                        stroke: new OpenLayers.style.Stroke({
+                            color: '#fff',
+                            width: 2
+                        })
                     })
-                })
+                }));
+
+                var accuracyFeature = new OpenLayers.Feature();
+                geolocation.on('change:accuracyGeometry', function() {
+                    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+                });
+
+
+                geolocation.on('change:position', function() {
+                    var coordinates = geolocation.getPosition();
+                    positionFeature.setGeometry(coordinates ?
+                        new OpenLayers.geom.Point(coordinates) : null);
+
+                    view.setCenter(coordinates);
+                    view.setZoom(17);
+                });
+
+                var featuresOverlay = new OpenLayers.FeatureOverlay({
+                    map : map,
+                    features : [accuracyFeature, positionFeature]
+                });
             },
             events : {
             },
