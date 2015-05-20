@@ -1,0 +1,27 @@
+{
+  "name": "TravelMobile",
+  "version": "0.0.0",
+  "authors": [
+    "Janne Parkkila <japskua@gmail.com>"
+  ],
+  "moduleType": [
+    "amd",
+    "node"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "backbone": "~1.2.0",
+    "requirejs": "~2.1.17",
+    "underscore": "~1.8.3",
+    "moment": "~2.10.3",
+    "materialize": "~0.96.1"
+  },
+  "license": "None",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
